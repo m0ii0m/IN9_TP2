@@ -1,7 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include <stddef.h>  // Pour size_t et ssize_t
+#include <sys/types.h>  // Pour size_t et ssize_t
 
 // Enumération pour le statut des fonctions
 typedef enum {
@@ -14,7 +14,8 @@ typedef enum {
 
 // Structure du tableau dynamique
 struct struct_vector{
-	//À compléter
+    //À compléter
+	size_t size;
 };
 
 typedef struct struct_vector s_vector;

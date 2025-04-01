@@ -89,27 +89,22 @@ VectorStatus vector_get(p_s_vector p_vector, ssize_t i, double *pv) {
 // Insère une nouvelle valeur v à l'index i du tableau dynamique
 VectorStatus vector_insert(p_s_vector p_vector, ssize_t i, double v) {
     // Si le pointeur est NULL, retourne une erreur
-    if (p_vector == NULL) {
+    if (p_vector == NULL || p_vector->data == NULL) {
         return VECTOR_ERROR_NULL_POINTER;
     }
 
-    // Si le tableau est vide ou de taille 0, retourne une erreur
-    if (p_vector->data == NULL) {
-        return VECTOR_ERROR_NOT_EMPTY;
-    }
-
     // Si l'index est hors limites, retourne une erreur
-    if (i < 0 || i > p_vector->size) {
+    if (i < 0 || (size_t)i >= p_vector->size) {
         return VECTOR_ERROR_OUT_OF_BOUNDS;
     }
 
     // Réalloue de la mémoire pour le tableau dynamique
     double *new_data = realloc(p_vector->data, (p_vector->size + 1) * sizeof(double));
     
-    // Incrémente la taille du tableau
-    p_vector->size++;
+    
     if (new_data != NULL) {
-
+        // Incrémente la taille du tableau
+        p_vector->size++;
         p_vector->data = new_data;
         // Décale les éléments à partir de l'index i vers la droite afin d'insérer notre valeur
         for (ssize_t j = p_vector->size-1; j > i; j--) {
@@ -139,7 +134,29 @@ VectorStatus vector_erase(p_s_vector p_vector, ssize_t i) {
 
 // Ajoute une valeur à la fin du tableau dynamique
 VectorStatus vector_push_back(p_s_vector p_vector, double v) {
-    // À implémenter
+    // Vérifie si le pointeur est valide
+    if (p_vector == NULL || p_vector->data == NULL) {
+        return VECTOR_ERROR_NULL_POINTER;
+    }
+    // Réalloue de la mémoire pour le tableau dynamique
+    double *new_data = realloc(p_vector->data, (p_vector->size + 1) * sizeof(double));
+
+    
+    if (new_data != NULL) {
+        p_vector->size++;
+        p_vector->data = new_data;
+
+        // Insère la nouvelle valeur à la fin du tableau
+        p_vector->data[p_vector->size - 1] = v;
+        return VECTOR_SUCCESS;
+    } else {
+        return VECTOR_ERROR_ALLOCATION;
+    }
+
+    if(p_vector->data == NULL) {
+        return VECTOR_ERROR_ALLOCATION;
+    }
+
     return VECTOR_ERROR_NULL_POINTER;
 }
 

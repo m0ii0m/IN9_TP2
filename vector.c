@@ -109,13 +109,6 @@ VectorStatus vector_insert(p_s_vector p_vector, ssize_t i, double v) {
     } else {
         return VECTOR_ERROR_ALLOCATION;
     }
-
-    // Si la réallocation échoue, retourne une erreur
-    if (p_vector->data == NULL) {
-        return VECTOR_ERROR_ALLOCATION;
-    }
-
-    return VECTOR_ERROR_NULL_POINTER;
 }
 
 // Supprime la valeur située à l'index i du tableau dynamique
@@ -170,12 +163,6 @@ VectorStatus vector_push_back(p_s_vector p_vector, double v) {
     } else {
         return VECTOR_ERROR_ALLOCATION;
     }
-
-    if(p_vector->data == NULL) {
-        return VECTOR_ERROR_ALLOCATION;
-    }
-
-    return VECTOR_ERROR_NULL_POINTER;
 }
 
 // Supprime la dernière valeur du tableau dynamique

@@ -38,12 +38,16 @@ p_s_vector vector_alloc(size_t n) {
 // Libère la mémoire du tableau dynamique et met le pointeur à NULL
 VectorStatus vector_free(p_s_vector *p_vector) {
     // Vérifie si la structure est valide
-    if (p_vector == NULL || *p_vector == NULL || (*p_vector)->data == NULL) {
+    if (p_vector == NULL || *p_vector == NULL) {
         return VECTOR_ERROR_NULL_POINTER;
     }
 
+    
+    if(vector_empty(*p_vector) == VECTOR_ERROR_NOT_EMPTY) {
+        free((*p_vector)->data);
+    }
+
     // Libère la mémoire du tableau dynamique
-    free((*p_vector)->data);
     free(*p_vector);
     *p_vector = NULL;
 

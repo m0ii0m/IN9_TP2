@@ -27,25 +27,17 @@ p_s_vector vector_alloc(size_t n) {
 
 // Libère la mémoire du tableau dynamique et met le pointeur à NULL
 VectorStatus vector_free(p_s_vector *p_vector) {
-    // Si le pointeur est NULL, retourne une erreur
-    if (p_vector == NULL) {
+    // Vérifie si la structure est valide
+    if (p_vector == NULL || *p_vector == NULL || (*p_vector)->data == NULL) {
         return VECTOR_ERROR_NULL_POINTER;
     }
-    // Si le tableau est vide ou de taille 0, retourne une erreur
-    if ((*p_vector)->data == NULL) {
-        return VECTOR_ERROR_NOT_EMPTY;
-    }
-    // Vérifie si le pointeur est valide
-    if (p_vector != NULL && *p_vector != NULL) {
-        // Libère la mémoire du tableau de données
-        free((*p_vector)->data);
-        // Libère la mémoire de la structure elle-même
-        free(*p_vector);
-        // Met le pointeur à NULL pour éviter les accès ultérieurs
-        *p_vector = NULL;
-        return VECTOR_SUCCESS;
-    }
-    return VECTOR_ERROR_NULL_POINTER;
+
+    // Libère la mémoire du tableau dynamique
+    free((*p_vector)->data);
+    free(*p_vector);
+    *p_vector = NULL;
+
+    return VECTOR_SUCCESS;
 }
 
 // Affecte la valeur v à l'index i du tableau dynamique
@@ -128,8 +120,34 @@ VectorStatus vector_insert(p_s_vector p_vector, ssize_t i, double v) {
 
 // Supprime la valeur située à l'index i du tableau dynamique
 VectorStatus vector_erase(p_s_vector p_vector, ssize_t i) {
-    // À implémenter
-    return VECTOR_ERROR_NULL_POINTER;
+    
+    // Vérifie si le pointeur est valide
+    if (p_vector == NULL || p_vector->data == NULL) {
+        return VECTOR_ERROR_NULL_POINTER;
+    }
+
+    // Vérifie si l'index est valide
+    if (i < 0 || (size_t)i >= p_vector->size) {
+        return VECTOR_ERROR_OUT_OF_BOUNDS;
+    }
+
+    // Décale les éléments à partir de l'index i vers la gauche
+    for (size_t j = i; j < p_vector->size - 1; j++) {
+        p_vector->data[j] = p_vector->data[j + 1];
+    }
+
+    // Réduit la taille du tableau dynamique
+    p_vector->size--;
+
+    // Réalloue la mémoire pour ajuster la taille du tableau
+    double* new_data = realloc(p_vector->data, p_vector->size * sizeof(double));
+    if (new_data == NULL && p_vector->size > 0) {
+        // Si la réallocation échoue et que la taille n'est pas 0, retourne une erreur
+        return VECTOR_ERROR_ALLOCATION;
+    }
+    p_vector->data = new_data;
+
+    return VECTOR_SUCCESS;
 }
 
 // Ajoute une valeur à la fin du tableau dynamique

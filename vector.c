@@ -21,7 +21,17 @@ p_s_vector vector_alloc(size_t n) {
             return vector;
         }
     }
-    // Si n est 0 ou l'allocation échoue, retourne NULL
+    
+    //Vérifie si n est égal à 0
+    if(n == 0) {
+        // Si n est 0, alloue un tableau vide
+        p_s_vector vector = malloc(sizeof(s_vector));
+        if (vector != NULL) {
+            vector->size = 0;
+            vector->data = NULL;
+            return vector;
+        }
+    }
     return NULL;
 }
 
@@ -146,11 +156,21 @@ VectorStatus vector_erase(p_s_vector p_vector, ssize_t i) {
 // Ajoute une valeur à la fin du tableau dynamique
 VectorStatus vector_push_back(p_s_vector p_vector, double v) {
     // Vérifie si le pointeur est valide
-    if (p_vector == NULL || p_vector->data == NULL) {
+    if (p_vector == NULL) {
         return VECTOR_ERROR_NULL_POINTER;
     }
-    // Réalloue de la mémoire pour le tableau dynamique
-    double *new_data = realloc(p_vector->data, (p_vector->size + 1) * sizeof(double));
+
+
+    double *new_data = NULL;
+    // Vérifie si le tableau est vide
+    if(p_vector->data == NULL || p_vector->size == 0) {
+        // Si le tableau est vide, alloue de la mémoire pour un seul élément
+        new_data = malloc(sizeof(double));
+    }else{
+        // Réalloue de la mémoire pour le tableau dynamique
+        new_data = realloc(p_vector->data, (p_vector->size + 1) * sizeof(double));
+    }
+    
 
     
     if (new_data != NULL) {

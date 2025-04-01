@@ -54,14 +54,40 @@ VectorStatus vector_free(p_s_vector *p_vector) {
 
 // Affecte la valeur v à l'index i du tableau dynamique
 VectorStatus vector_set(p_s_vector p_vector, ssize_t i, double v) {
-    // À implémenter
-    return VECTOR_ERROR_NULL_POINTER;
+
+    // Vérifie si le pointeur est valide
+    if (p_vector == NULL || p_vector->data == NULL) {
+        return VECTOR_ERROR_NULL_POINTER;
+    }
+
+    // Vérifie si l'index est valide
+    if (i < 0 || (size_t)i >= p_vector->size) {
+        return VECTOR_ERROR_OUT_OF_BOUNDS;
+    }
+
+    // Affecte la valeur v à l'index i
+    p_vector->data[i] = v;
+
+    return VECTOR_SUCCESS;
 }
 
 // Récupère la valeur stockée à l'index i et la stocke dans pv
 VectorStatus vector_get(p_s_vector p_vector, ssize_t i, double *pv) {
-    // À implémenter
-    return VECTOR_ERROR_NULL_POINTER;
+
+    // Vérifie si le pointeur est valide
+    if (p_vector == NULL || p_vector->data == NULL || pv == NULL) {
+        return VECTOR_ERROR_NULL_POINTER;
+    }
+
+    // Vérifie si l'index est valide
+    if (i < 0 || (size_t)i >= p_vector->size) {
+        return VECTOR_ERROR_OUT_OF_BOUNDS;
+    }
+    
+    // Récupère la valeur à l'index i
+    *pv = p_vector->data[i];
+
+    return VECTOR_SUCCESS;
 }
 
 // Insère une nouvelle valeur v à l'index i du tableau dynamique

@@ -3,13 +3,52 @@
 
 // Alloue et initialise un tableau dynamique
 p_s_vector vector_alloc(size_t n) {
-    // À implémenter
+    // Vérifie si n est supérieur à 0
+    if (n > 0) {
+        // Alloue de la mémoire pour le tableau dynamique
+        p_s_vector vector = malloc(sizeof(s_vector));
+        if (vector != NULL) {
+            vector->size = n;
+            vector->data = malloc(n * sizeof(double));
+            if (vector->data == NULL) {
+                free(vector);
+                return NULL;
+            }
+            // Initialise les valeurs du tableau à 0
+            for (size_t i = 0; i < n; i++) {
+                vector->data[i] = 0.0;
+            }
+            return vector;
+        }
+    }
+    // Si n est 0 ou l'allocation échoue, retourne NULL
     return NULL;
 }
 
 // Libère la mémoire du tableau dynamique et met le pointeur à NULL
 VectorStatus vector_free(p_s_vector *p_vector) {
-    // À implémenter
+    // Vérifie si le pointeur est valide
+    if (p_vector != NULL && *p_vector != NULL) {
+        // Libère la mémoire du tableau de données
+        free((*p_vector)->data);
+        // Libère la mémoire de la structure elle-même
+        free(*p_vector);
+        // Met le pointeur à NULL pour éviter les accès ultérieurs
+        *p_vector = NULL;
+        return VECTOR_SUCCESS;
+    }
+    // Si le pointeur est NULL, retourne une erreur
+    if (p_vector == NULL) {
+        return VECTOR_ERROR_NULL_POINTER;
+    }
+    // Si le tableau est vide, retourne une erreur
+    if ((*p_vector)->data == NULL) {
+        return VECTOR_ERROR_NOT_EMPTY;
+    }
+    // Si la taille est 0, retourne une erreur
+    if ((*p_vector)->size == 0) {
+        return VECTOR_ERROR_NOT_EMPTY;
+    }
     return VECTOR_ERROR_NULL_POINTER;
 }
 

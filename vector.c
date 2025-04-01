@@ -163,7 +163,7 @@ VectorStatus vector_push_back(p_s_vector p_vector, double v) {
     }
 
 
-    double *new_data = NULL;
+    double* new_data = NULL;
     // Vérifie si le tableau est vide
     if(p_vector->data == NULL || p_vector->size == 0) {
         // Si le tableau est vide, alloue de la mémoire pour un seul élément
@@ -189,8 +189,20 @@ VectorStatus vector_push_back(p_s_vector p_vector, double v) {
 
 // Supprime la dernière valeur du tableau dynamique
 VectorStatus vector_pop_back(p_s_vector p_vector) {
-    // À implémenter
-    return VECTOR_ERROR_NULL_POINTER;
+    // Vérifie si le pointeur est valide
+    if (p_vector == NULL || p_vector->data == NULL) {
+        return VECTOR_ERROR_NULL_POINTER;
+    }
+
+    // Réduit la taille du tableau dynamique
+    size_t new_size = p_vector->size - 1;
+    double* new_data = realloc(p_vector->data, new_size * sizeof(double));
+    if (new_data != NULL) {
+        p_vector->size = new_size;
+        p_vector->data = new_data;
+        return VECTOR_SUCCESS;
+    }
+    return VECTOR_ERROR_ALLOCATION;
 }
 
 // Supprime toutes les valeurs du tableau dynamique

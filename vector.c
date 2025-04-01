@@ -139,16 +139,18 @@ VectorStatus vector_erase(p_s_vector p_vector, ssize_t i) {
         p_vector->data[j] = p_vector->data[j + 1];
     }
 
-    // Réduit la taille du tableau dynamique
-    p_vector->size--;
+    size_t new_size = p_vector->size - 1;
 
     // Réalloue la mémoire pour ajuster la taille du tableau
-    double* new_data = realloc(p_vector->data, p_vector->size * sizeof(double));
-    if (new_data == NULL && p_vector->size > 0) {
+    double* new_data = realloc(p_vector->data, new_size * sizeof(double));
+    if (new_data == NULL && new_size > 0) {
         // Si la réallocation échoue et que la taille n'est pas 0, retourne une erreur
         return VECTOR_ERROR_ALLOCATION;
     }
     p_vector->data = new_data;
+
+    // Réduit la taille du tableau dynamique
+    p_vector->size = new_size;
 
     return VECTOR_SUCCESS;
 }
@@ -193,19 +195,44 @@ VectorStatus vector_pop_back(p_s_vector p_vector) {
 
 // Supprime toutes les valeurs du tableau dynamique
 VectorStatus vector_clear(p_s_vector p_vector) {
-    // À implémenter
-    return VECTOR_ERROR_NULL_POINTER;
+    // Vérifie si le pointeur est valide
+    if (p_vector == NULL || p_vector->data == NULL) {
+        return VECTOR_ERROR_NULL_POINTER;
+    }
+
+    // Libère la mémoire du tableau dynamique
+    free(p_vector->data);
+    p_vector->data = NULL;
+    p_vector->size = 0;
+
+    return VECTOR_SUCCESS;
 }
 
 // Vérifie si le tableau dynamique est vide
 VectorStatus vector_empty(p_s_vector p_vector) {
-    // À implémenter
-    return VECTOR_ERROR_NULL_POINTER;
+    // Vérifie si le pointeur est valide
+    if (p_vector == NULL) {
+        return VECTOR_ERROR_NULL_POINTER;
+    }
+
+    // Vérifie si le tableau est vide
+    if (p_vector->size == 0 && p_vector->data == NULL) {
+        return VECTOR_SUCCESS;
+    }
+
+    return VECTOR_ERROR_NOT_EMPTY;
 }
 
 // Récupère le nombre d'éléments stockés dans le tableau dynamique
 VectorStatus vector_size(p_s_vector p_vector, size_t *size) {
-    // À implémenter
-    return VECTOR_ERROR_NULL_POINTER;
+    // Vérifie si le pointeur est valide
+    if (p_vector == NULL || size == NULL) {
+        return VECTOR_ERROR_NULL_POINTER;
+    }
+
+    // Récupère la taille du tableau dynamique
+    *size = p_vector->size;
+
+    return VECTOR_SUCCESS;
 }
 

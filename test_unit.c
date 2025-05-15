@@ -22,13 +22,13 @@ int test_vector_alloc_free() {
     return 0;
 }
 
-// Test d'insertion et de récupération d'éléments
+// Test d'attribution et de récupération d'éléments
 int test_vector_set_get() {
     p_s_vector vec = vector_alloc(5);
     ASSERT(vec != NULL);
     ASSERT(vec->size == 5);
 
-    // Vérification de l'insertion de valeurs dans le vecteur
+    // Vérification de l'attribution de valeurs dans le vecteur
     for (size_t i = 0; i < vec->size; i++) {
         ASSERT(vector_set(vec, i, (double)i) == VECTOR_SUCCESS);
     }
@@ -52,7 +52,7 @@ int test_vector_insert_erase() {
     p_s_vector vec = vector_alloc(5);
     ASSERT(vec != NULL);
     ASSERT(vec->size == 5);
-    // Insertion de valeurs dans le vecteur
+    // Initialisation de valeurs dans le vecteur
     for (size_t i = 0; i < vec->size; i++) {
         ASSERT(vector_set(vec, i, (double)i) == VECTOR_SUCCESS);
     }
